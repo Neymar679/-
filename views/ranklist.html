@@ -1,0 +1,2141 @@
+<!-- 排行榜 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./ranklist.css">
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+    * {
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    iframe {
+        width: auto;
+        height: 800px;
+    }
+
+    html {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    :root {
+        --body-font: "Inter", sans-serif;
+        --theme-bg: #1f1d2b;
+        --body-color: #808191;
+        --button-bg: #353340;
+        --border-color: rgb(128 129 145 / 24%);
+        --video-bg: #252936;
+
+        /* --theme-bg: #ffffff;
+  --body-color: #000000;
+  --button-bg: #f5f5f5;
+  --border-color: rgb(0 0 0 / 24%);
+  --video-bg: #ffffff; */
+
+        --delay: 0s;
+    }
+
+    body {
+        font-family: var(--body-font);
+        color: var(--body-color);
+        background-image: url("https://images.unsplash.com/photo-1445251836269-d158eaa028a6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1951&q=80");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-blend-mode: color-dodge;
+        background-color: rgba(18, 21, 39, 0.86);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 1em 2em;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    body:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0px, 0px, 0px, 0px;
+        background: linear-gradient(163deg, rgb(31, 29, 43) 21%, rgba(31, 29, 43, 0.3113620448) 64%);
+        opacity: 0.4;
+        content: "";
+    }
+
+    .container {
+        background-color: var(--theme-bg);
+        /* 用来控制整个块的最大边长 */
+        width: 100%;
+        /* max-width: 1100px; */
+        max-height: 900px;
+        height: 95vh;
+        display: flex;
+        overflow: hidden;
+
+        border-radius: 20px;
+        font-size: 15px;
+        font-weight: 500;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        position: relative;
+    }
+
+    .sidebar {
+        width: 220px;
+        height: 100%;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        transition-duration: 0.2s;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .sidebar .logo {
+        display: none;
+        width: 30px;
+        height: 30px;
+        background-color: #22b07d;
+        flex-shrink: 0;
+        color: #fff;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+    }
+
+    .sidebar .logo-expand {
+        text-decoration: none;
+        color: #fff;
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 34px;
+        position: sticky;
+        top: 0;
+    }
+
+    .sidebar .logo-expand:before {
+        content: "";
+        position: absolute;
+        top: -30px;
+        left: 0;
+        background: var(--theme-bg);
+        width: 200px;
+        height: 70px;
+        z-index: -1;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.is-active {
+        color: #000000;
+        font-weight: 600;
+    }
+
+    .sidebar-link:hover:nth-child(2n+1) svg,
+    .sidebar-link.is-active:nth-child(2n+1) svg {
+        background: #ff7551;
+    }
+
+    .sidebar-link:hover:nth-child(2n) svg,
+    .sidebar-link.is-active:nth-child(2n) svg {
+        background: #32a7e2;
+    }
+
+    .sidebar-link:hover:nth-child(2n+3) svg,
+    .sidebar-link.is-active:nth-child(2n+3) svg {
+        background: #6c5ecf;
+    }
+
+    .sidebar.collapse {
+        width: 90px;
+        border-right: 1px solid var(--border-color);
+    }
+
+    .sidebar.collapse .logo-expand,
+    .sidebar.collapse .side-title {
+        display: none;
+    }
+
+    .sidebar.collapse .logo {
+        display: flex;
+    }
+
+    .sidebar.collapse .side-wrapper {
+        width: 30px;
+    }
+
+    .sidebar.collapse .side-menu svg {
+        margin-right: 30px;
+    }
+
+    @keyframes bottom {
+        0% {
+            transform: translateY(100px);
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    .side-menu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .side-menu a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--body-color);
+    }
+
+    .side-menu a+a {
+        margin-top: 26px;
+    }
+
+    .side-menu svg {
+        width: 30px;
+        padding: 8px;
+        border-radius: 10px;
+        background-color: var(--button-bg);
+        flex-shrink: 0;
+        margin-right: 16px;
+    }
+
+    .side-menu svg:hover {
+        color: #fff;
+    }
+
+    .side-title {
+        font-size: 12px;
+        letter-spacing: 0.07em;
+        margin-bottom: 24px;
+    }
+
+    .side-wrapper {
+        border-bottom: 1px solid var(--border-color);
+        padding: 36px 0;
+        width: 145px;
+    }
+
+    .side-wrapper+.side-wrapper {
+        border-bottom: none;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        /* flex-grow: 1; */
+
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        padding: 30px;
+    }
+
+    .search-bar {
+        height: 34px;
+        display: flex;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .search-bar input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background-color: var(--button-bg);
+        border-radius: 8px;
+        font-family: var(--body-font);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 0 40px 0 16px;
+        box-shadow: 0 0 0 2px rgba(134, 140, 160, 0.02);
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56.966 56.966' fill='%23717790c7'%3e%3cpath d='M55.146 51.887L41.588 37.786A22.926 22.926 0 0046.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 00.083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z'/%3e%3c/svg%3e");
+        background-size: 14px;
+        background-repeat: no-repeat;
+        background-position: 96%;
+        color: #fff;
+    }
+
+    .user-settings {
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    .user-settings svg {
+        width: 10px;
+        flex-shrink: 0;
+    }
+
+    @media screen and (max-width: 575px) {
+        .user-settings svg {
+            display: none;
+        }
+    }
+
+    .user-settings .notify {
+        position: relative;
+    }
+
+    .user-settings .notify svg {
+        width: 20px;
+        margin-left: 24px;
+        flex-shrink: 0;
+    }
+
+    .user-settings .notify .notification {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #ec5252;
+        position: absolute;
+        right: 1px;
+        border: 1px solid var(--theme-bg);
+        top: -2px;
+    }
+
+    @media screen and (max-width: 575px) {
+        .user-settings .notify .notification {
+            display: none;
+        }
+    }
+
+    .user-img {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .user-name {
+        color: #000000;
+        font-size: 14px;
+        margin: 0 6px 0 12px;
+    }
+
+    @media screen and (max-width: 575px) {
+        .user-name {
+            display: none;
+        }
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        padding: 0 30px 30px;
+        flex-grow: 1;
+        overflow: auto;
+    }
+
+    .anim {
+        animation: bottom 0.8s var(--delay) both;
+    }
+
+    .main-header {
+        font-size: 30px;
+        color: #fff;
+        font-weight: 700;
+        padding-bottom: 20px;
+        /* position: sticky; */
+        top: 0;
+        left: 0;
+        background: linear-gradient(to bottom, #1f1d2b 0%, #1f1d2b 78%, rgba(31, 29, 43, 0));
+        z-index: 11;
+    }
+
+    .small-header {
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+        margin: 30px 0 20px;
+    }
+
+    .main-blogs {
+        display: flex;
+        align-items: center;
+    }
+
+    .main-blog__author {
+        display: flex;
+        align-items: center;
+        padding-bottom: 10px;
+    }
+
+    .main-blog__author.tips {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+    }
+
+    .main-blog__title {
+        font-size: 25px;
+        max-width: 12ch;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #030303;
+        margin-bottom: 30px;
+    }
+
+    .main-blog {
+        background-image: url("https://gd-hbimg.huaban.com/9538e688de7c87edad5126ca4b38152b110d055f285169-3WoQDW_fw480webp");
+        background-size: 40%;
+        background-position-x: 320px;
+        background-color: #cffdfd;
+        display: flex;
+        flex-direction: column;
+        width: 65%;
+        padding: 30px;
+        border-radius: 20px;
+        align-self: stretch;
+        overflow: hidden;
+        position: relative;
+        transition: background 0.2s;
+        background-repeat: no-repeat;
+    }
+
+    .main-blog+.main-blog {
+        margin-left: 20px;
+        width: 35%;
+        background-image: url("https://gd-hbimg.huaban.com/1275eccd4ecff791c0b1e457c078f1512035bdff1090cc-vJ1wfm_fw480webp");
+        background-color: #0b6161;
+        background-color: unset;
+        background-position-x: 0;
+        background-size: 200%;
+        filter: saturate(1.4);
+    }
+
+    .main-blog+.main-blog .author-img {
+        border-color: rgba(255, 255, 255, 0.75);
+        margin-top: 14px;
+    }
+
+    .main-blog+.main-blog .author-img__wrapper svg {
+        border-color: #ffe6b2;
+        color: #e7bb7d;
+    }
+
+    .main-blog+.main-blog .author-detail {
+        margin-left: 0;
+    }
+
+    @media screen and (max-width: 905px) {
+
+        .main-blog,
+        .main-blog+.main-blog {
+            width: 50%;
+            padding: 30px;
+        }
+
+        .main-blog {
+            background-size: cover;
+            background-position-x: center;
+            background-blend-mode: overlay;
+        }
+    }
+
+    .main-blog__time {
+        background: rgba(21, 13, 13, 0.44);
+        color: #ffffff;
+        padding: 3px 8px;
+        font-size: 12px;
+        border-radius: 6px;
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .author-img {
+        width: 52px;
+        height: 52px;
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        padding: 4px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-img__wrapper {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .author-img__wrapper svg {
+        width: 16px;
+        padding: 2px;
+        background-color: #fff;
+        color: #0daabc;
+        border-radius: 50%;
+        border: 2px solid #0daabc;
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+    }
+
+    .author-name {
+        font-size: 15px;
+        color: #000000;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .author-info {
+        font-size: 13px;
+        font-weight: 400;
+        color: #000000;
+    }
+
+    .author-detail {
+        margin-left: 16px;
+    }
+
+    .seperate {
+        width: 3px;
+        height: 3px;
+        display: inline-block;
+        vertical-align: middle;
+        border-radius: 50%;
+        background-color: #fff;
+        margin: 0 6px;
+    }
+
+    .seperate.video-seperate {
+        background-color: var(--body-color);
+    }
+
+    .videos {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(4, 1fr);
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+    }
+
+    @media screen and (max-width: 980px) {
+        .videos {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .video {
+        position: relative;
+        background-color: var(--video-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: 0.4s;
+    }
+
+    .video-wrapper {
+        position: relative;
+    }
+
+    .video-name {
+        color: #fff;
+        font-size: 16px;
+        line-height: 1.4em;
+        padding: 12px 20px 0;
+        overflow: hidden;
+        background-color: var(--video-bg);
+        z-index: 9;
+        position: relative;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .video-view {
+        font-size: 12px;
+        padding: 12px 20px 20px;
+        background-color: var(--video-bg);
+        position: relative;
+    }
+
+    .video-by {
+        transition: 0.3s;
+        padding: 20px 20px 0px;
+        display: inline-flex;
+        position: relative;
+    }
+
+    .video-by:before {
+        content: "";
+        background-color: #22b07d;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        position: absolute;
+        top: 26px;
+        right: 5px;
+    }
+
+    .video-by.offline:before {
+        background-color: #ff7551;
+    }
+
+    .video-time {
+        position: absolute;
+        background: rgba(21, 13, 13, 0.44);
+        color: rgba(255, 255, 255, 0.85);
+        padding: 3px 8px;
+        font-size: 12px;
+        border-radius: 6px;
+        top: 10px;
+        z-index: 1;
+        right: 8px;
+    }
+
+    .video:hover video {
+        transform: scale(1.6);
+        transform-origin: center;
+    }
+
+    .video:hover .video-time {
+        display: none;
+    }
+
+    .video:hover .video-author {
+        bottom: -65px;
+        transform: scale(0.6);
+        right: -3px;
+        z-index: 10;
+    }
+
+    .video:hover .video-by {
+        opacity: 0;
+    }
+
+    .video-author {
+        position: absolute;
+        right: 10px;
+        transition: 0.4s;
+        bottom: -25px;
+    }
+
+    .video-author svg {
+        background-color: #0aa0f7;
+        color: #fff;
+        border-color: var(--video-bg);
+    }
+
+    video {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+        display: block;
+        cursor: pointer;
+        transition: 0.4s;
+    }
+
+
+    .stream-area1 {
+        display: none;
+    }
+
+    @media screen and (max-width: 940px) {
+        .stream-area1 {
+            flex-direction: column;
+        }
+
+        .stream-area1 .video-stream {
+            width: 100%;
+        }
+
+        .stream-area1 .chat-stream {
+            margin-left: 0;
+            margin-top: 30px;
+        }
+
+        .stream-area1 .video-js.vjs-fluid {
+            min-height: 250px;
+        }
+
+        .stream-area1 .msg__content {
+            max-width: 100%;
+        }
+    }
+
+    .show .stream-area1 {
+        display: flex;
+    }
+
+
+    .stream-area {
+        display: none;
+    }
+
+    @media screen and (max-width: 940px) {
+        .stream-area {
+            flex-direction: column;
+        }
+
+        .stream-area .video-stream {
+            width: 100%;
+        }
+
+        .stream-area .chat-stream {
+            margin-left: 0;
+            margin-top: 30px;
+        }
+
+        .stream-area .video-js.vjs-fluid {
+            min-height: 250px;
+        }
+
+        .stream-area .msg__content {
+            max-width: 100%;
+        }
+    }
+
+    .show .stream-area {
+        display: flex;
+    }
+
+    /*  */
+
+    .show .main-header,
+    .show .main-blogs,
+    .show .small-header,
+    .show .videos {
+        display: none;
+    }
+
+    .video-stream {
+        width: 65%;
+        object-fit: cover;
+        transition: 0.3s;
+    }
+
+    .video-stream:hover .video-js .vjs-big-play-button {
+        opacity: 1;
+    }
+
+    .video-p {
+        margin-right: 12px;
+        object-fit: cover;
+        flex-shrink: 0;
+        border-radius: 50%;
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .video-p .author-img {
+        border: 0;
+    }
+
+    .video-p-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .video-p-wrapper .author-img {
+        border: 0;
+    }
+
+    .video-p-wrapper svg {
+        width: 20px;
+        padding: 4px;
+    }
+
+    @media screen and (max-width: 650px) {
+        .video-p-wrapper {
+            flex-direction: column;
+        }
+
+        .video-p-wrapper .button-wrapper {
+            margin: 20px auto 0;
+        }
+
+        .video-p-wrapper .video-p-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .video-p-wrapper .video-p {
+            margin-right: 0;
+        }
+    }
+
+    .video-p-sub {
+        font-size: 12px;
+    }
+
+    .video-p-title {
+        font-size: 24px;
+        color: #fff;
+        line-height: 1.4em;
+        margin: 16px 0 20px;
+    }
+
+    .video-p-subtitle {
+        font-size: 14px;
+        line-height: 1.5em;
+        max-width: 60ch;
+    }
+
+    .video-p-subtitle+.video-p-subtitle {
+        margin-top: 16px;
+    }
+
+    .video-p-name {
+        margin-bottom: 8px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+    }
+
+    .video-p-name:after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background-color: #22b07d;
+        border-radius: 50%;
+        margin-left: 8px;
+        display: inline-block;
+    }
+
+    .video-p-name.offline:after {
+        background-color: #ff7551;
+    }
+
+    .video-content {
+        width: 100%;
+    }
+
+    .button-wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .like {
+        display: flex;
+        align-items: center;
+        background-color: var(--button-bg);
+        color: #fff;
+        border: 0;
+        font-family: var(--body-font);
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .like.red {
+        background-color: #ea5f5f;
+    }
+
+    .like svg {
+        width: 18px;
+        flex-shrink: 0;
+        margin-right: 10px;
+        padding: 0;
+    }
+
+    .like+.like {
+        margin-left: 16px;
+    }
+
+    .video-stats {
+        margin-left: 30px;
+    }
+
+    .video-detail {
+        display: flex;
+        margin-top: 30px;
+        width: 100%;
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        position: sticky;
+        top: 0;
+        background-color: #252836;
+        left: 0;
+        z-index: 1;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .chat-header svg {
+        width: 15px;
+        margin-right: 6px;
+        flex-shrink: 0;
+    }
+
+    .chat-header span {
+        margin-left: auto;
+        color: var(--body-color);
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+    }
+
+    .chat-stream {
+        flex-grow: 1;
+        margin-left: 30px;
+    }
+
+    .chat {
+        background-color: #252836;
+        border-radius: 20px;
+        padding: 0 20px;
+        max-height: 414px;
+        overflow: auto;
+    }
+
+    .chat-footer {
+        display: flex;
+        align-items: center;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        width: calc(100% + 20px);
+        padding-bottom: 12px;
+        background-color: #252836;
+    }
+
+    .chat-footer input {
+        width: 100%;
+        border: 0;
+        background-color: #2d303e;
+        border-radius: 20px;
+        font-size: 12px;
+        color: #fff;
+        margin-left: -10px;
+        padding: 12px 40px;
+        font-weight: 500;
+        font-family: var(--body-font);
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 12C2 6.48 6.47 2 12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10C6.47 22 2 17.52 2 12zm5.52 1.2c-.66 0-1.2-.54-1.2-1.2 0-.66.54-1.2 1.2-1.2.66 0 1.19.54 1.19 1.2 0 .66-.53 1.2-1.19 1.2zM10.8 12c0 .66.54 1.2 1.2 1.2.66 0 1.19-.54 1.19-1.2a1.194 1.194 0 10-2.39 0zm4.48 0a1.195 1.195 0 102.39 0 1.194 1.194 0 10-2.39 0z' fill='%236c6e78'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: 24px;
+        background-position: 8px;
+    }
+
+    .chat-footer input::placeholder {
+        color: #6c6e78;
+    }
+
+    .chat-footer:before {
+        content: "";
+        position: absolute;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M21.435 2.582a1.933 1.933 0 00-1.93-.503L3.408 6.759a1.92 1.92 0 00-1.384 1.522c-.142.75.355 1.704 1.003 2.102l5.033 3.094a1.304 1.304 0 001.61-.194l5.763-5.799a.734.734 0 011.06 0c.29.292.29.765 0 1.067l-5.773 5.8c-.428.43-.508 1.1-.193 1.62l3.075 5.083c.36.604.98.946 1.66.946.08 0 .17 0 .251-.01.78-.1 1.4-.634 1.63-1.39l4.773-16.075c.21-.685.02-1.43-.48-1.943z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: 14px;
+        background-position: center;
+        width: 18px;
+        height: 18px;
+        background-color: #6c5ecf;
+        padding: 4px;
+        border-radius: 50%;
+        right: 16px;
+    }
+
+    .chat-vid__title {
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .chat-vid__container {
+        margin-top: 40px;
+    }
+
+    .chat-vid__wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 26px;
+    }
+
+    .chat-vid__name {
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.3em;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+    }
+
+    .chat-vid__img {
+        width: 100px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: right;
+        margin-right: 16px;
+        transition: 0.3s;
+    }
+
+    .chat-vid__img:hover {
+        transform: scale(1.02);
+    }
+
+    .chat-vid__content {
+        max-width: 20ch;
+    }
+
+    .chat-vid__by,
+    .chat-vid__info {
+        color: var(--body-color);
+        font-size: 13px;
+    }
+
+    .chat-vid__by {
+        margin: 6px 0;
+    }
+
+    .chat-vid__button {
+        background-color: #6c5ecf;
+        border: 0;
+        color: #fff;
+        font-size: 13px;
+        margin-top: 26px;
+        display: flex;
+        padding: 0 10px;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .chat-vid__button:hover {
+        background-color: #5847d0;
+    }
+
+    .message {
+        display: flex;
+        align-items: center;
+        margin-top: 18px;
+    }
+
+    .message:last-child {
+        margin-bottom: 18px;
+    }
+
+    .message-container .author-img__wrapper svg {
+        width: 15px;
+    }
+
+    .msg__name {
+        font-size: 13px;
+    }
+
+    .msg__content {
+        line-height: 1.4em;
+        max-width: 26ch;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .video-js .vjs-control-bar {
+        display: flex;
+        align-items: center;
+    }
+
+    .vjs-poster {
+        background-size: 150%;
+    }
+
+    .video-js .vjs-control-bar {
+        width: 100%;
+        position: absolute;
+        bottom: 14px;
+        padding-left: 36px;
+        left: 14px;
+        width: calc(100% - 28px);
+        right: 0;
+        border-radius: 10px;
+        height: 4em;
+        background-color: #2b333f;
+        background-color: rgba(43, 51, 63, 0.7);
+    }
+
+    @media screen and (max-width: 625px) {
+        .video-js .vjs-control-bar {
+            padding-left: 0;
+        }
+    }
+
+    .video-js:hover .vjs-big-play-button {
+        background-color: rgba(43, 51, 63, 0.5);
+    }
+
+    .video-js .vjs-big-play-button {
+        transition: 0.3s;
+        opacity: 0;
+        border: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .video-js .vjs-big-play-button:hover {
+        background-color: rgba(43, 51, 63, 0.7);
+        border-color: transparent;
+    }
+
+    .vjs-play-control:after {
+        content: "LIVE";
+        position: absolute;
+        left: -66px;
+        top: 7px;
+        background-color: #8941e3;
+        height: 24px;
+        font-family: var(--body-font);
+        font-size: 10px;
+        padding: 0 12px 0 26px;
+        display: flex;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        align-items: center;
+        border-radius: 6px;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-circle'%3e%3ccircle cx='12' cy='12' r='10'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: 6px;
+        background-position: 12px;
+    }
+
+    @media screen and (max-width: 625px) {
+        .vjs-play-control:after {
+            display: none;
+        }
+    }
+
+    .vjs-menu-button-inline .vjs-menu {
+        top: 4px;
+    }
+
+    .video-js .vjs-control:before,
+    .video-js .vjs-time-control {
+        line-height: 40px;
+    }
+
+    .video-js .vjs-tech {
+        object-fit: cover;
+    }
+
+    button.vjs-play-control.vjs-control.vjs-button {
+        margin-left: 40px;
+    }
+
+    @media screen and (max-width: 625px) {
+        button.vjs-play-control.vjs-control.vjs-button {
+            margin-left: 0;
+        }
+    }
+
+    .vjs-icon-fullscreen-enter:before,
+    .video-js .vjs-fullscreen-control:before {
+        content: "";
+        position: absolute;
+        display: block;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='20' height='20' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.54 0h3.38c1.41 0 2.54 1.15 2.54 2.561V5.97c0 1.42-1.13 2.56-2.54 2.56H2.54C1.14 8.53 0 7.39 0 5.97V2.561C0 1.15 1.14 0 2.54 0zm0 11.47h3.38c1.41 0 2.54 1.14 2.54 2.56v3.41c0 1.41-1.13 2.56-2.54 2.56H2.54C1.14 20 0 18.85 0 17.44v-3.41c0-1.42 1.14-2.56 2.54-2.56zM17.46 0h-3.38c-1.41 0-2.54 1.15-2.54 2.561V5.97c0 1.42 1.13 2.56 2.54 2.56h3.38c1.4 0 2.54-1.14 2.54-2.56V2.561C20 1.15 18.86 0 17.46 0zm-3.38 11.47h3.38c1.4 0 2.54 1.14 2.54 2.56v3.41c0 1.41-1.14 2.56-2.54 2.56h-3.38c-1.41 0-2.54-1.15-2.54-2.56v-3.41c0-1.42 1.13-2.56 2.54-2.56z' fill='%23fff'/%3e%3c/svg%3e");
+        background-size: 11px;
+        background-position: center;
+        background-position-y: 14px;
+        background-repeat: no-repeat;
+        opacity: 0.6;
+    }
+
+    .vjs-playback-rate .vjs-playback-rate-value {
+        font-size: 1.1em;
+        line-height: 3.5em;
+        opacity: 0.6;
+        font-weight: 700;
+        font-family: var(--body-font);
+    }
+
+    .video-js .vjs-playback-rate {
+        width: 2.2em;
+    }
+
+    .video-js.vjs-fluid {
+        border-radius: 20px;
+        overflow: hidden;
+        min-height: 414px;
+    }
+
+    @media screen and (max-width: 735px) {
+        .main-blogs {
+            flex-wrap: wrap;
+        }
+
+        .main-blog,
+        .main-blog+.main-blog {
+            width: 100%;
+        }
+
+        .videos {
+            grid-template-columns: 1fr;
+        }
+
+        .main-blog+.main-blog {
+            margin-left: 0;
+            margin-top: 20px;
+            background-size: cover;
+        }
+    }
+
+    @media screen and (max-width: 475px) {
+        .main-blog__title {
+            font-size: 20px;
+        }
+
+        .author-name {
+            font-size: 14px;
+        }
+
+        .main-blog__author {
+            flex-direction: column-reverse;
+            align-items: flex-start;
+        }
+
+        .author-detail {
+            margin-left: 0;
+        }
+
+        .main-blog .author-img {
+            margin-top: 14px;
+        }
+
+        .main-container {
+            padding: 0 20px 20px;
+        }
+
+        .header {
+            padding: 20px;
+        }
+
+        .sidebar.collapse {
+            width: 40px;
+        }
+
+        .sidebar {
+            align-items: center;
+        }
+
+        body {
+            padding: 0 0 0 0;
+        }
+
+        .container {
+            height: 100%;
+            width: 100%;
+            border-radius: 0;
+            max-height: 100%;
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(21, 20, 26, 0.63);
+        border-radius: 10px;
+    }
+
+    /*# sourceMappingURL=index.css.map */
+
+    /* 图片容器 */
+    .image-container img {
+        position: relative;
+        max-width: 100%;
+        max-height: 100%;
+        overflow: hidden;
+        margin: 10px;
+    }
+
+    /* 图片 */
+    .image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* 图片遮罩层 */
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    /* 鼠标悬停时显示遮罩层 */
+    .image-container:hover .image-overlay {
+        opacity: 1;
+    }
+
+    /* 遮罩层上的文字 */
+    .overlay-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* 右上角按钮 */
+    .user-name {
+        margin-left: 10px;
+        border: #0aa0f7 2px solid;
+        border-radius: 10px;
+        padding: 5px;
+        color: #0aa0f7;
+        font-size: 15px;
+        font-weight: bold;
+        margin: 5px;
+    }
+
+    /* 实现鼠标悬浮的动态效果 */
+    .user-name:hover {
+        transform: scale(1.1);
+        transition: transform 0.3s ease-in-out;
+    }
+</style>
+
+<!-- 从id=16开始 到id=30截止 -->
+
+<body style="padding: 0px,0px,0px,0px;">
+    <div class="container" style="width: 1000px;margin-top:-30px;height: 1000px;">
+        <div class="wrapper">
+            <div class="main-container">
+                <div class="main-header anim" style="--delay: 0s">今日排行榜</div>
+                <div class="main-blogs">
+                    <div class="main-blog anim" style="--delay: .1s">
+                        <div class="main-blog__title">遍地散落的樱花皆是我对你的思念</div>
+                        <div class="main-blog__author">
+                            <div class="author-img__wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=766970137,3810386402&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                            <div class="author-detail">
+                                <div class="author-name">china阿伟</div>
+                                <div class="author-info">53K 次浏览 <span class="seperate"></span>2 天之前</div>
+                            </div>
+                        </div>
+                        <!-- <div class="main-blog__time">7 min</div> -->
+                    </div>
+                    <div class="main-blog anim" style="--delay: .2s">
+                        <div class="main-blog__title">几缕阳光照射的是你我奋笔疾书的身影</div>
+                        <div class="main-blog__author tips">
+                            <!-- <div class="main-blog__time">7 min</div> -->
+                            <div class="author-img__wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=2494832389,3580899986&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                            <div class="author-detail">
+                                <div class="author-name">china阿昌</div>
+                                <div class="author-info">1425K 次浏览 <span></span>1 天之前</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="small-header anim" style="--delay: .3s"> 本周排行榜 </div>
+
+                <div class="videos">
+
+                    <div class="video anim" style="--delay: .4s">
+
+                        <div class="video-wrapper">
+
+                            <!-- <img src="https://gd-hbimg.huaban.com/be4aedd42d9c1415b5e949830bc34103c32ff6874d01a-E3jPzG_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/be4aedd42d9c1415b5e949830bc34103c32ff6874d01a-E3jPzG_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=16&imgSrc=https://gd-hbimg.huaban.com/be4aedd42d9c1415b5e949830bc34103c32ff6874d01a-E3jPzG_fw480webp"
+                                    target="_blank" rel="noopener noreferrer" class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img1.baidu.com/it/u=3486651663,3991438881&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+
+                        <div class="video-by">呆萌之上加点笨=-=</div>
+                        <div class="video-name">少女之时也曾怀梦，做自己舞台的主人</div>
+                        <div class="video-view">78K 次浏览<span class="seperate video-seperate"></span>1 周之前</div>
+                    </div>
+
+
+
+                    <div class="video anim" style="--delay: .5s">
+                        <div class="video-wrapper">
+
+                            <!-- <div style="width: 450px;">
+                                <img src="https://gd-hbimg.huaban.com/25b5851c59671be0368c8f7c0acfe017ea86fa77155f1b-HjRato_fw480webp"
+                                    style="width:100%; height:auto; background-size: 200%">
+                            </div> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/25b5851c59671be0368c8f7c0acfe017ea86fa77155f1b-HjRato_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=17&imgSrc=https://gd-hbimg.huaban.com/25b5851c59671be0368c8f7c0acfe017ea86fa77155f1b-HjRato_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=2015865969,3401990894&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=546" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">小羊不叫肖恩</div>
+                        <div class="video-name">最后生活总是会磨平我们尖锐的棱角</div>
+                        <div class="video-view">999K 次浏览<span class="seperate video-seperate"></span>2 周之前</div>
+                    </div>
+
+
+
+                    <div class="video anim" style="--delay: .6s">
+                        <!-- <div class="video-time">7 min</div> -->
+                        <div class="video-wrapper">
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/d5ef15bbe352e7955e99ecd27e2fa7df193ed010293834-w9GFcy_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=18&imgSrc=https://gd-hbimg.huaban.com/25b5851c59671be0368c8f7c0acfe017ea86fa77155f1b-HjRato_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=2930860502,1649034224&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+
+                        <div class="video-by offline">小呀小泡芙^-^</div>
+                        <div class="video-name">在城市喧嚣的人流之中，万般热闹，而唯我一人孤寂。</div>
+                        <div class="video-view">648K <span class="seperate video-seperate"></span>5 天之前</div>
+                    </div>
+
+                    <div class="video anim" style="--delay: .7s">
+                        <!-- <div class="video-time">6 min</div> -->
+                        <div class="video-wrapper">
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/1d5c70691d5a5827de122fe10be88c18fedecd692d7ba9-gshxGJ_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=18&imgSrc=https://gd-hbimg.huaban.com/25b5851c59671be0368c8f7c0acfe017ea86fa77155f1b-HjRato_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img0.baidu.com/it/u=352957576,3177347271&fm=253&fmt=auto&app=138&f=JPEG?w=517&h=500" />
+                            </div>
+                        </div>
+
+                        <div class="video-by offline">柠檬加冰有点甜</div>
+                        <div class="video-name">一定会有一个像樱花般浪漫的人向你一步一步走来吧</div>
+                        <div class="video-view">520K 次观看<span class="seperate video-seperate"></span>3 天之前</div>
+                    </div>
+                </div>
+                <div class="small-header anim" style="--delay: .3s"> 本月排行榜 </div>
+                <div class="videos">
+
+                    <div class="video anim" style="--delay: .4s">
+                        <!-- <div class="video-time">8 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436572488.sd.mp4?s=eae5fb490e214deb9ff532dd98d101efe94e7a8b&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                                
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/69e59a3e416d1d0878f0adca7b98311fa4f301294090e-RGD9Hp_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/69e59a3e416d1d0878f0adca7b98311fa4f301294090e-RGD9Hp_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=19&imgSrc=https://gd-hbimg.huaban.com/69e59a3e416d1d0878f0adca7b98311fa4f301294090e-RGD9Hp_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                            </div>
+                        </div>
+                        <div class="video-by  offline">不知名的网友莫</div>
+                        <div class="video-name">一两缕清风，三两片云朵，这是我们对生活最美好的幻想</div>
+                        <div class="video-view">14K 次浏览<span class="seperate video-seperate"></span>2 月之前</div>
+                    </div>
+
+                    <div class="video anim" style="--delay: .5s">
+                        <!-- <div class="video-time">5 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/449972745.sd.mp4?s=9943177fe8a6147b7bc4598259401f06ec57878a&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/de1d67ca0b7e0c86985bd378f8d37830ce4acc7a15c7c6-rizXLx_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/de1d67ca0b7e0c86985bd378f8d37830ce4acc7a15c7c6-rizXLx_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=20&https://gd-hbimg.huaban.com/de1d67ca0b7e0c86985bd378f8d37830ce4acc7a15c7c6-rizXLx_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://images.pexels.com/photos/3370021/pexels-photo-3370021.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">唐僧洗头用飘柔</div>
+                        <div class="video-name">当初你身旁那满眼是你的女孩，如今还在你身旁吗？</div>
+                        <div class="video-view">42K 次浏览<span class="seperate video-seperate"></span>1 月之前</div>
+                    </div>
+
+                    <div class="video anim" style="--delay: .6s">
+                        <!-- <div class="video-time">7 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436553499.sd.mp4?s=0e44527f269278743db448761e35c5e39cfaa52c&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+
+                            <!-- <img src="https://gd-hbimg.huaban.com/f8ba3ac5b6505a2b04aef8102119e70ba005536a48756-DTqa4q_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/f8ba3ac5b6505a2b04aef8102119e70ba005536a48756-DTqa4q_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=21&imgSrc=https://gd-hbimg.huaban.com/f8ba3ac5b6505a2b04aef8102119e70ba005536a48756-DTqa4q_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://images.pexels.com/photos/1870163/pexels-photo-1870163.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">麻衣学姐的小学弟</div>
+                        <div class="video-name">那年树下你对我的约定是一时，可我却铭记至今</div>
+                        <div class="video-view">649K 次浏览<span class="seperate video-seperate"></span>2 月之前</div>
+                    </div>
+                    <div class="video anim" style="--delay: .7s">
+                        <!-- <div class="video-time">6 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/361861493.sd.mp4?s=19d8275ca755d653042a87ef28b2f0b2eabf57d0&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/68e1efbcb73e0ecf386e23ee715feff83e13ca8375652-3fPltD_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/68e1efbcb73e0ecf386e23ee715feff83e13ca8375652-3fPltD_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=22&imgSrc=https://gd-hbimg.huaban.com/68e1efbcb73e0ecf386e23ee715feff83e13ca8375652-3fPltD_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                            </div>
+                        </div>
+                        <div class="video-by">我真不是美羊羊</div>
+                        <div class="video-name">清风指路，猫狗作伴，悠悠笛声，散尽哀愁</div>
+                        <div class="video-view">780K 次浏览<span class="seperate video-seperate"></span>4 月之前</div>
+                    </div>
+                </div>
+                <div class="small-header anim" style="--delay: .3s">AI生成作品排行榜</div>
+                <div class="videos">
+
+                    <div class="video anim" style="--delay: .4s">
+                        <!-- <div class="video-time">8 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436572488.sd.mp4?s=eae5fb490e214deb9ff532dd98d101efe94e7a8b&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/8831fb0c541d09524d2118c98c32db2f6c82394058e65-IXHRW3_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/8831fb0c541d09524d2118c98c32db2f6c82394058e65-IXHRW3_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=23&imgSrc=https://gd-hbimg.huaban.com/8831fb0c541d09524d2118c98c32db2f6c82394058e65-IXHRW3_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img1.baidu.com/it/u=1211515661,1765727770&fm=253&fmt=auto&app=138&f=JPEG?w=501&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by">奶酪加糖有点甜</div>
+                        <div class="video-name">曾经两小无猜的我们，现在为何只剩我一人</div>
+                        <div class="video-view">54K 次浏览<span class="seperate video-seperate"></span>6 天之前</div>
+                    </div>
+
+                    <div class="video anim" style="--delay: .5s">
+                        <!-- <div class="video-time">5 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/449972745.sd.mp4?s=9943177fe8a6147b7bc4598259401f06ec57878a&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/2fd2266c9a7ea2b52b6d863e54da7341ebbd9d701c67b7-xvXJce_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/2fd2266c9a7ea2b52b6d863e54da7341ebbd9d701c67b7-xvXJce_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=24&imgSrc=https://gd-hbimg.huaban.com/2fd2266c9a7ea2b52b6d863e54da7341ebbd9d701c67b7-xvXJce_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=3646034193,1545496705&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">我也想和麻衣学姐谈恋爱</div>
+                        <div class="video-name">因你对我回眸一笑，那日烟火格外闪亮</div>
+                        <div class="video-view">412K 次浏览<span class="seperate video-seperate"></span>3 周之前</div>
+                    </div>
+                    <div class="video anim" style="--delay: .6s">
+                        <!-- <div class="video-time">7 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436553499.sd.mp4?s=0e44527f269278743db448761e35c5e39cfaa52c&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/721d4d56324fb5962294d65cb262fd3a1625aa7b394e8-irB79L_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/721d4d56324fb5962294d65cb262fd3a1625aa7b394e8-irB79L_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=25&imgSrc=https://gd-hbimg.huaban.com/721d4d56324fb5962294d65cb262fd3a1625aa7b394e8-irB79L_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img1.baidu.com/it/u=1901254254,718557268&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">还我喵喵拳</div>
+                        <div class="video-name">满天灯火照亮的不是这漆黑夜空，而是我对你满怀的思念^-^!</div>
+                        <div class="video-view">64K 次浏览<span class="seperate video-seperate"></span>5天之前</div>
+                    </div>
+                    <div class="video anim" style="--delay: .7s">
+                        <!-- <div class="video-time">6 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/361861493.sd.mp4?s=19d8275ca755d653042a87ef28b2f0b2eabf57d0&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/26c5bcc38ba800f843812bb1e7e5f344d62cef5c22a3a5-mwEiMs_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/26c5bcc38ba800f843812bb1e7e5f344d62cef5c22a3a5-mwEiMs_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=26&imgSrc=https://gd-hbimg.huaban.com/26c5bcc38ba800f843812bb1e7e5f344d62cef5c22a3a5-mwEiMs_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=2705868485,1032046698&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by">奶味的喵小橘</div>
+                        <div class="video-name">邻家有女初长成，二八芳龄正年华！！！</div>
+                        <div class="video-view">150K 次浏览<span class="seperate video-seperate"></span>1 周之前</div>
+                    </div>
+                </div>
+
+                <div class="small-header anim" style="--delay: .3s"> 新域原创作品排行榜</div>
+
+                <div class="videos">
+
+                    <div class="video anim" style="--delay: .4s">
+                        <!-- <div class="video-time">8 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436572488.sd.mp4?s=eae5fb490e214deb9ff532dd98d101efe94e7a8b&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                                
+                            </video> -->
+                            <!-- <img src="https://image-assets.mihuashi.com/pfop/permanent/116935%7C-2023/05/18/19/FoZsWrLu8NgsmNDbsLy42C_tu0oy.jpg!artwork.large"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://image-assets.mihuashi.com/pfop/permanent/116935%7C-2023/05/18/19/FoZsWrLu8NgsmNDbsLy42C_tu0oy.jpg!artwork.large"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=27&imgSrc=https://image-assets.mihuashi.com/pfop/permanent/116935%7C-2023/05/18/19/FoZsWrLu8NgsmNDbsLy42C_tu0oy.jpg!artwork.large" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img1.baidu.com/it/u=4156445349,1861317714&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400" />
+                            </div>
+                        </div>
+                        <div class="video-by">清新草莓奶昔带点泡</div>
+                        <div class="video-name">文房之中，雅物典雅，書香袅袅，讀書的氣息濃烈。</div>
+                        <div class="video-view">354K 次浏览<span class="seperate video-seperate"></span>4 天之前</div>
+                    </div>
+
+                    <div class="video anim" style="--delay: .5s">
+                        <!-- <div class="video-time">5 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/449972745.sd.mp4?s=9943177fe8a6147b7bc4598259401f06ec57878a&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/ca04c2a2741adb7d36e012dff04eaaaa2814a23c5c8b5-1DJVnZ_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/ca04c2a2741adb7d36e012dff04eaaaa2814a23c5c8b5-1DJVnZ_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=28&imgSrc=https://gd-hbimg.huaban.com/ca04c2a2741adb7d36e012dff04eaaaa2814a23c5c8b5-1DJVnZ_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=1880259761,2512111746&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">雨中蓑衣客</div>
+                        <div class="video-name">他说你任何为人称道的美丽，不及他第一次遇见你</div>
+                        <div class="video-view">42K 次浏览<span class="seperate video-seperate"></span>3 天之前</div>
+                    </div>
+                    <div class="video anim" style="--delay: .6s">
+                        <!-- <div class="video-time">7 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/436553499.sd.mp4?s=0e44527f269278743db448761e35c5e39cfaa52c&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/3a3211844a0c1ea48ba1358cb464a2e1e5aa9d2d28b9b-nPDYeq_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/3a3211844a0c1ea48ba1358cb464a2e1e5aa9d2d28b9b-nPDYeq_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=29&imgSrc=https://gd-hbimg.huaban.com/3a3211844a0c1ea48ba1358cb464a2e1e5aa9d2d28b9b-nPDYeq_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img0.baidu.com/it/u=53079408,1616173051&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by offline">美味奶酪蟹黄堡</div>
+                        <div class="video-name">小鸟看着我沉默不语一定是也有它自己的烦恼吧？</div>
+                        <div class="video-view">264K 次浏览<span class="seperate video-seperate"></span>2 周之前</div>
+                    </div>
+                    <div class="video anim" style="--delay: .7s">
+                        <!-- <div class="video-time">6 min</div> -->
+                        <div class="video-wrapper">
+                            <!-- <video muted="">
+                                <source
+                                    src="https://player.vimeo.com/external/361861493.sd.mp4?s=19d8275ca755d653042a87ef28b2f0b2eabf57d0&profile_id=139&oauth2_token_id=57447761"
+                                    type="video/mp4">
+                            </video> -->
+                            <!-- <img src="https://gd-hbimg.huaban.com/7b97e2a2397a3b8c2540705196f23b1c8b85aae12f7396-QNhVXx_fw480webp"
+                                alt="" srcset=""> -->
+
+                            <div class="image-container">
+                                <img src="https://gd-hbimg.huaban.com/7b97e2a2397a3b8c2540705196f23b1c8b85aae12f7396-QNhVXx_fw480webp"
+                                    alt="" srcset="" class="image">
+                                <a href="./workdetails.html?id=30&imgSrc=https://gd-hbimg.huaban.com/7b97e2a2397a3b8c2540705196f23b1c8b85aae12f7396-QNhVXx_fw480webp" target="_blank" rel="noopener noreferrer"
+                                    class="image-overlay">
+                                    <div class="overlay-text">作品详情</div>
+                                </a>
+                            </div>
+
+                            <div class="author-img__wrapper video-author">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                                <img class="author-img"
+                                    src="https://img2.baidu.com/it/u=3766774593,802153124&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" />
+                            </div>
+                        </div>
+                        <div class="video-by">我的哥哥名叫菜虚鲲2</div>
+                        <div class="video-name">中分头，背带裤，篮球阿坤你记住！！！</div>
+                        <div class="video-view">350K 次浏览<span class="seperate video-seperate"></span>1 周之前</div>
+                    </div>
+                </div>
+
+                <!-- 推荐作品 -->
+                <div class="stream-area" style="display: none;">
+                    <div class="video-stream">
+                        <img src="https://t7.baidu.com/it/u=3039972918,1763345442&fm=193&f=GIF"
+                            class="video-js vjs-default-skin anim" width="640px" height="267px"
+                            style="border-radius: 10px; margin-top: 10px;">
+
+                        <div class="video-detail">
+                            <div class="video-content">
+                                <div class="video-p-wrapper anim" style="--delay: .1s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                                    </div>
+                                    <div class="video-p-detail">
+                                        <div class="video-p-name">爱拍照的小萌</div>
+                                        <div class="video-p-sub">1,980,893 粉丝</div>
+                                    </div>
+                                    <div class="button-wrapper">
+                                        <button class="like">
+                                            <svg viewBox="0 0 24 24" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M21.435 2.582a1.933 1.933 0 00-1.93-.503L3.408 6.759a1.92 1.92 0 00-1.384 1.522c-.142.75.355 1.704 1.003 2.102l5.033 3.094a1.304 1.304 0 001.61-.194l5.763-5.799a.734.734 0 011.06 0c.29.292.29.765 0 1.067l-5.773 5.8c-.428.43-.508 1.1-.193 1.62l3.075 5.083c.36.604.98.946 1.66.946.08 0 .17 0 .251-.01.78-.1 1.4-.634 1.63-1.39l4.773-16.075c.21-.685.02-1.43-.48-1.943z" />
+                                            </svg>
+                                            分享
+                                        </button>
+                                        <button class="like red">
+                                            <svg viewBox="0 0 24 24" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M15.85 2.5c.63 0 1.26.09 1.86.29 3.69 1.2 5.02 5.25 3.91 8.79a12.728 12.728 0 01-3.01 4.81 38.456 38.456 0 01-6.33 4.96l-.25.15-.26-.16a38.093 38.093 0 01-6.37-4.96 12.933 12.933 0 01-3.01-4.8c-1.13-3.54.2-7.59 3.93-8.81.29-.1.59-.17.89-.21h.12c.28-.04.56-.06.84-.06h.11c.63.02 1.24.13 1.83.33h.06c.04.02.07.04.09.06.22.07.43.15.63.26l.38.17c.092.05.195.125.284.19.056.04.107.077.146.1l.05.03c.085.05.175.102.25.16a6.263 6.263 0 013.85-1.3zm2.66 7.2c.41-.01.76-.34.79-.76v-.12a3.3 3.3 0 00-2.11-3.16.8.8 0 00-1.01.5c-.14.42.08.88.5 1.03.64.24 1.07.87 1.07 1.57v.03a.86.86 0 00.19.62c.14.17.35.27.57.29z" />
+                                            </svg>
+                                            喜欢
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="video-p-title anim" style="--delay: .2s">
+                                    两只麋鹿的相遇
+                                </div>
+                                <div class="video-p-subtitle anim" style="--delay: .3s">&nbsp;&nbsp;
+                                    两只麋鹿在广袤的草原上相遇，它们的眼神里透着凄凉，仿佛失去了方向和归属。但是，这个偶然的相遇注定带来了改变。
+                                    它们并肩漫步，在日出的光芒下，美丽的草原散发着芬芳清新的气息。夏日的风吹拂着沙沙作响的草叶，鸟儿在枝头唧唧喳喳，仿佛在欢迎这两个可爱的新朋友。
+                                    麋鹿们看到了彼此的孤单，渐渐地发现了彼此相似的地方。它们都在寻找着自己的家园和归属，都希望能够找到一片安身立命的土地。于是它们开始了新的旅程，一起穿过了森林和山脉，经历了风雨与日晒，一路上彼此扶持着。
+                                    在旅途中，它们学会了互相信任和帮助，学会了更加坚强和勇敢。它们发现经历的风雨越多，它们之间的羁绊就越深，越加珍视彼此的存在。
+                                </div>
+                                <div class="video-p-subtitle anim" style="--delay: .4s">&nbsp;&nbsp;
+                                    最终，它们找到了一块广袤的土地，在那里它们定居下来，建造了自己的家园。它们在自由和幸福中度过每一天，生命也因此变得更加美好。
+                                    即使在最黑暗的夜晚，这两只麋鹿也不再感到孤单。它们相互依靠，共同分享生命中的欢乐和挑战，创造出了意想不到的美好。
+                                    在孤独和无助的时候，也不要失去希望。如果我们勇敢地走出去，相信世界会回馈我们更加美好的东西。无论何时何地，我们都可以在周围寻找那些与我们相似的人，彼此扶持，在互相支持中走向更加美好的未来。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 闲聊 -->
+                    <div class="chat-stream">
+                        <div class="chat">
+                            <div class="chat-header anim">其它作者<span><svg viewBox="0 0 24 24" fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M14.212 7.762c0 2.644-2.163 4.763-4.863 4.763-2.698 0-4.863-2.119-4.863-4.763C4.486 5.12 6.651 3 9.35 3c2.7 0 4.863 2.119 4.863 4.762zM2 17.917c0-2.447 3.386-3.06 7.35-3.06 3.985 0 7.349.634 7.349 3.083 0 2.448-3.386 3.06-7.35 3.06C5.364 21 2 20.367 2 17.917zM16.173 7.85a6.368 6.368 0 01-1.137 3.646c-.075.107-.008.252.123.275.182.03.369.048.56.052 1.898.048 3.601-1.148 4.072-2.95.697-2.675-1.35-5.077-3.957-5.077a4.16 4.16 0 00-.818.082c-.036.008-.075.025-.095.055-.025.04-.007.09.019.124a6.414 6.414 0 011.233 3.793zm3.144 5.853c1.276.245 2.115.742 2.462 1.467a2.107 2.107 0 010 1.878c-.531 1.123-2.245 1.485-2.912 1.578a.207.207 0 01-.234-.232c.34-3.113-2.367-4.588-3.067-4.927-.03-.017-.036-.04-.034-.055.002-.01.015-.025.038-.028 1.515-.028 3.145.176 3.747.32z" />
+                                    </svg>
+                                    15,988 人
+                                </span>
+                            </div>
+                            <div class="message-container">
+                                <div class="message anim" style="--delay: .1s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.unsplash.com/photo-1560941001-d4b52ad00ecc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name"> 我叫江小白</div>
+                                        <div class="msg__content video-p-sub">优秀的插画作者,拥有很多高质量插画
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message anim" style="--delay: .2s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name offline"> 布莱斯</div>
+                                        <div class="msg__content video-p-sub"> 高级UI设计师,拥有很多高质量UI设计作品
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message anim" style="--delay: .3s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mzl8fG1lbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name offline"> 库卢尔</div>
+                                        <div class="msg__content video-p-sub">魅力的摄影师,拥有很多高质量摄影作品
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message anim" style="--delay: .4s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.pexels.com/photos/1870163/pexels-photo-1870163.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name"> 插画大师</div>
+                                        <div class="msg__content video-p-sub"> 插画能力超强,拥有很多高质量插画作品
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message anim" style="--delay: .5s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name"> 格伦</div>
+                                        <div class="msg__content video-p-sub">照相能力超强,拥有很多高质量照片作品
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="message anim" style="--delay: .6s">
+                                    <div class="author-img__wrapper video-author video-p">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-check">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <img class="author-img"
+                                            src="https://images.pexels.com/photos/2889942/pexels-photo-2889942.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                                    </div>
+                                    <div class="msg-wrapper">
+                                        <div class="msg__name video-p-name offline">约翰</div>
+                                        <div class="msg__content video-p-sub">
+                                            画画能力超强,拥有很多高质量画画作品
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-footer anim" style="--delay: .1s">
+                                <input type="text" placeholder="写下你的想法">
+                            </div>
+                        </div>
+                        <div class="chat-vid__container">
+                            <div class="chat-vid__title anim" style="--delay: .3s">相关作品</div>
+                            <div class="chat-vid anim" style="--delay: .4s">
+                                <div class="chat-vid__wrapper">
+                                    <img class="chat-vid__img"
+                                        src="https://cdn.nohat.cc/thumb/f/720/3b55eddcfffa4e87897d.jpg" />
+                                    <div class="chat-vid__content">
+                                        <div class="chat-vid__name">准备第一次尝试</div>
+                                        <div class="chat-vid__by">萌萌</div>
+                                        <div class="chat-vid__info">125.908 观看 <span class="seperate"></span>2 天前
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-vid anim" style="--delay: .5s">
+                                <div class="chat-vid__wrapper">
+                                    <img class="chat-vid__img"
+                                        src="https://t7.baidu.com/it/u=2479311042,1688266655&fm=193&f=GIF" />
+                                    <div class="chat-vid__content">
+                                        <div class="chat-vid__name">来一次插画尝试</div>
+                                        <div class="chat-vid__by">克拉尔</div>
+                                        <div class="chat-vid__info">125.908 观看 <span class="seperate"></span>2 天前
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-vid__button anim" style="--delay: .6s">观看所有相关视频 (32)</div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!-- 排行榜 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<style>
+    /* VIP.css */
+
+    html {
+        width: 800px;
+        height: 776px;
+        /* 这里是 超出部分删除 达到把滚动框消失的效果 */
+        overflow: hidden;
+    }
+
+    body {
+        width: 800px;
+        height: 776px;
+        font-family: "Lato", sans-serif;
+        color: white;
+        background: #171A1D;
+    }
+
+
+
+    #contain {
+        margin: 100px auto;
+        width: 800px;
+        height: 700px;
+        margin-top: 100px;
+    }
+
+    #table {
+        width: 200px;
+        height: 250px;
+        display: inline-block;
+        /*border:3px solid rgba(39, 44, 48, 0.36); */
+        /* float: left; */
+        background: #171A1D;
+        margin-left: 60px;
+
+    }
+
+    #table .head {
+        font-weight: 900;
+        font-size: 30px;
+        text-transform: uppercase;
+        text-align: center;
+        min-height: 60px;
+        line-height: 50px;
+    }
+
+    #table .offer ul {
+        list-style: none;
+        padding: 20px;
+    }
+
+    #table .offer ul li {
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 15px;
+        color: #8C8C8C;
+    }
+
+    .cta {
+        width: 100%;
+        height: 50px;
+        margin: 0 auto;
+        background: #FDA202;
+        text-align: center;
+        text-transform: uppercase;
+        line-height: 50px;
+        font-size: 15px;
+        color: #171A1D;
+        font-weight: 900;
+        border-radius: 10px;
+    }
+
+    .cta:hover {
+        background: #FDC202;
+        cursor: pointer;
+        /* div块变大 */
+        /* 缓慢控制一下变大的速度 */
+
+        /* 控制一下变大后往回缩小的速度 */
+
+        transition: all 0.5s ease;
+
+        transform: scale(1.1);
+    }
+
+    .yellow {
+        border-bottom: 5px solid #FDA202;
+    }
+
+    #table.pro {
+        background: #15181B;
+    }
+</style>
+
+
+
+<body>
+
+
+    <div id="contain">
+
+        <div id="table">
+            <div class="head yellow">普通</div>
+
+            <div class="offer">
+                <ul>
+                    <li>5 次下载机会</li>
+                    <li>5 种在线修改机会</li>
+                    <li>1 GB 缓存</li>
+                    <li>5 人团队</li>
+                    <li>10G 团队工作容量</li>
+                </ul>
+            </div>
+            <div class="cta" style="color: #dbc290;background-color: #c48f3491;">正在使用</div>
+        </div>
+
+        <div id="table" class="pro">
+            <div class="head yellow" style="color: #fda10291;">VIP</div>
+
+            <div class="offer">
+                <ul>
+                    <li>50 次下载机会</li>
+                    <li>50 种在线修改机会</li>
+                    <li>10 GB 缓存</li>
+                    <li>50 人团队</li>
+                    <li>100G 团队工作容量</li>
+                </ul>
+            </div>
+            <div class="cta cta1">10元购买</div>
+        </div>
+
+        <div id="table">
+            <div class="head yellow" style="color: #FDA202;">SVIP</div>
+
+            <div class="offer">
+                <ul>
+                    <li>无限 次下载机会</li>
+                    <li>无限 种在线修改机会</li>
+                    <li>无限 缓存</li>
+                    <li>100 人团队</li>
+                    <li>1TB 团队工作容量</li>
+                </ul>
+            </div>
+            <div class="cta cta2">20元购买</div>
+        </div>
+
+    </div>
+
+</body>
+<script>
+    $(function () {
+        $('.cta1').click(function () {
+            alert('VIP购买成功')
+            localStorage.setItem('vip', 10)
+        })
+        $('.cta2').click(function () {
+            alert('SVIP购买成功')
+            localStorage.setItem('vip', 20)
+        })
+    })
+</script>
+
+</html>

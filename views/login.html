@@ -1,0 +1,531 @@
+<!-- 登陆页面 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新域-创意分享世界</title>
+    <link href="login.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="../js/login.js"></script>
+    <style>
+        body {
+            background-image: linear-gradient(135deg, #ffffffc2 10%, #279baa 80%);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: "Open Sans", sans-serif;
+            color: #110e0e;
+            /* height: 600px;
+            width: 61.8%; */
+        }
+
+        .box-form {
+            margin: 0 auto;
+            width: 80%;
+            height: 80%;
+            background: #FFFFFF;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex: 1 1 100%;
+            align-items: stretch;
+            justify-content: space-between;
+            box-shadow: 0 0 20px 6px rgba(0, 0, 0, 0.522);
+        }
+
+        @media (max-width: 980px) {
+            .box-form {
+                flex-flow: wrap;
+                text-align: center;
+                align-content: center;
+                align-items: center;
+            }
+        }
+
+        .box-form div {
+            height: auto;
+        }
+
+        .left {
+            width: 61%;
+        }
+
+        .right {
+            width: 39%;
+        }
+
+        .box-form .left {
+            color: #000000;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-image: url("https://i0.hdslb.com/bfs/article/2649abf7c0cddb5e17b5dd8adb821723469e75c7.png@942w_942h_progressive.webp");
+            overflow: hidden;
+            /* 字体设为正楷 */
+            font-family: "KaiTi";
+
+        }
+
+        .box-form .left .overlay {
+            padding: 30px;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.411);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .box-form .left .overlay h1 {
+            font-size: 5vmax;
+            line-height: 2;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .box-form .left .overlay span p {
+            margin-top: 30px;
+            font-weight: 1000;
+        }
+
+        .box-form .left .overlay span a {
+            background: #02ffff;
+            color: #000000;
+            margin-top: 10px;
+            padding: 14px 50px;
+            border-radius: 100px;
+            display: inline-block;
+            box-shadow: 0 3px 6px 1px rgba(4, 45, 70, 0.3411764706);
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            /* 将图片和链接文本之间的距离设置为 10 像素 */
+            vertical-align: middle;
+            /* 设置图片和文本的垂直对齐方式居中 */
+        }
+
+        .box-form .left .overlay span a:last-child {
+            background: #1dcaff;
+            margin-left: 80px;
+        }
+
+        .box-form .right {
+            padding: 50px;
+            /* overflow: hidden; */
+            /* background: #a4e9f541; */
+             /* background: linear-gradient(to bottom, #4e4f5511 0%, #55575a00 40%, #05f7ff7e  50%, #05f7ffc9 100%); */
+             /* background: linear-gradient(to bottom, #add8e6 40%, #d3d3d3 60%, #ffffff 100%); */
+background: linear-gradient(to bottom, white 0%, lightgray 20%, skyblue 40%);
+
+        }
+
+        @media (max-width: 980px) {
+            .box-form .right {
+                width: 100%;
+            }
+        }
+
+        .box-form .right h5 {
+            font-size: 3vmax;
+            line-height: 1.5;
+            height: 30px;
+            text-align: center;
+        }
+
+        .box-form .right p {
+            font-size: 16px;
+            color: #000000;
+        }
+
+        .box-form .right .inputs {
+            overflow: hidden;
+        }
+
+        .box-form .right input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 25px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            border-bottom: 2px solid #000000;
+        }
+
+        .box-form .right .remember-me--forget-password {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .box-form .right .remember-me--forget-password input {
+            margin: 0;
+            margin-right: 7px;
+            width: auto;
+        }
+
+        .box-form .right button {
+            /* float: right; */
+            color: #000000;
+            font-size: 16px;
+            padding: 12px 35px;
+            border-radius: 50px;
+            display: inline-block;
+            border: 0;
+            outline: 0;
+            box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.651);
+            background-image: linear-gradient(135deg, #00ffea 10%, #ffffff 100%);
+        }
+
+        label {
+            display: block;
+            position: relative;
+            margin-left: 30px;
+        }
+
+        label::before {
+            content: " \f00c";
+            position: absolute;
+            font-family: FontAwesome;
+            background: transparent;
+            border: 3px solid #70f5d8;
+            border-radius: 4px;
+            color: transparent;
+            left: -30px;
+            transition: all 0.2s linear;
+        }
+
+        label:hover::before {
+            font-family: FontAwesome;
+            content: " \f00c";
+            color: #fff;
+            cursor: pointer;
+            background: #000000;
+        }
+
+        label:hover::before .text-checkbox {
+            background: #70F570;
+        }
+
+        label span.text-checkbox {
+            display: inline-block;
+            height: auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s linear;
+        }
+
+        label input[type=checkbox] {
+            display: none;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-label {
+
+            margin-left: 10px;
+            font-size: 16px;
+            line-height: 1.0;
+            cursor: pointer;
+        }
+
+        .checkbox-icon {
+            display: inline-block;
+            position: relative;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+
+        .checkbox-input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .checkbox-input:checked+.checkbox-icon::before {
+            content: "\f00c";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-family: FontAwesome;
+            font-size: 14px;
+            color: #fff;
+            background-color: #000000;
+            border: 2px solid #000000;
+            border-radius: 3px;
+            text-align: center;
+            line-height: 16px;
+        }
+
+        .checkbox-icon:hover {
+            border-color: #70f5d8;
+        }
+
+        .checkbox-icon:hover::before {
+            color: #000;
+        }
+
+        .checkbox-input:focus+.checkbox-icon {
+            outline: 1px dotted #aaa;
+        }
+
+        .checkbox-input:checked:focus+.checkbox-icon {
+            outline: 1px solid #70f5d8;
+        }
+
+        /* 输入框 */
+        input {
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+
+        body {
+            background-image: url('https://i0.hdslb.com/bfs/article/b36f9c94be4a495e99c85075afa28c0ac7dd4547.jpg@942w_531h_progressive.webp');
+
+            background-size: cover;
+
+            font-family: '微软雅黑';
+            font-size: 1.05em;
+        }
+
+        .name {
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .name span {
+            font-size: 1.2em;
+        }
+
+        p.center {
+            text-align: center;
+            color: #fff;
+        }
+
+        .login-page {
+            width: 360px;
+            margin: 0 auto;
+            padding: 5em 0 0;
+        }
+
+        /* 这里是修改右边输入框的 */
+        .form {
+            position: relative;
+            background: #fff;
+            max-width: 460px;
+            padding: 45px;
+            margin: 0 auto 100px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+            text-align: center;
+            overflow: hidden;
+            margin-left: 0px;
+            margin-top: -100px;
+            width: 270px;
+            height: 180px;
+        }
+
+        .form .register_form {
+            display: none;
+        }
+
+        .form input {
+            outline: 0;
+            width: 100%;
+            font-size: 14px;
+            padding: 15px;
+            margin: 0 0 15px;
+            background: #f2f2f2;
+            box-sizing: border-box;
+            /* //CSS3 box-sizing属性，为元素指定的任何内边距和边框都将在已设定的宽度和高度内进行绘制。 */
+        }
+
+        .form button {
+            width: 100%;
+            background: #4CAF50;
+            color: #fff;
+            border: 0;
+            padding: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            outline: 0;
+        }
+
+        .form button:hover,
+        .form button:active,
+        .form button:focus {
+            background: #4febffee;
+        }
+
+        .message {
+            font-size: 12px;
+            color: #b3b3b3;
+            margin: 15px 0 0;
+        }
+
+        .message a {
+            color: #4febffee;
+            text-decoration: none;
+        }
+
+        .shake_effect {
+            -webkit-animation-name: shake;
+            animation-name: shake;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+        }
+
+        @-webkit-keyframes shake {
+
+            from,
+            to {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                -webkit-transform: translate3d(-10px, 0, 0);
+                transform: translate3d(-10px, 0, 0);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                -webkit-transform: translate3d(10px, 0, 0);
+                transform: translate3d(10px, 0, 0);
+            }
+        }
+
+        @keyframes shake {
+
+            from,
+            to {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                -webkit-transform: translate3d(-10px, 0, 0);
+                transform: translate3d(-10px, 0, 0);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                -webkit-transform: translate3d(10px, 0, 0);
+                transform: translate3d(10px, 0, 0);
+            }
+        }
+
+        .imgIcon {
+            position: fixed;
+            width: 200px;
+            height: 100px;
+            /* margin-top: 10%; */
+            /* margin-top: -3%; */
+            margin-left: 100px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box-form" style="margin-top: 5%; width: 70%; height: 50%;">
+        <div class="left">
+
+            <div class="overlay">
+                <h1>新域-创意分享世界</h1>
+                <p style="font-size: 36px;">新域是一个二次元分享交流平台,这里有无限的创意,前沿的AI技术,活跃的社群氛围。
+                    大家可以在这里找到许多欢乐。</p>
+            </div>
+        </div>
+
+        <div class="right">
+            <img src="../img/9632024d871196e0612202b6b4f2acf.png" alt="" srcset="" class="imgIcon">
+            <br>            
+            <h5 style="font-family: STXingkai;"></h5>
+
+            <!-- <p>您是否没有账户？ <a href="#">创建一个属于您的账户</a>, 这仅仅只花费您几分钟。</p> -->
+            <!-- <div class="inputs">
+                <input type="text" placeholder="用户名">
+                <br>
+                <input type="password" placeholder="密码">
+
+            </div> -->
+
+            <!-- <header class="name">
+                <h1>带摇晃特效的扁平风格登录注册表单界面</h1>
+                <span>Flat HTML5/CSS3 Login Form</span>
+            </header>
+            <p class="center">登录用户名为:ysq,密码为ysq</p>
+            <p class="center">在用户名和密码错误时，点击登录按钮可以看到表单的摇晃效果。</p> -->
+
+            <div id="wraper" class="login-page" style="height: 300px; margin-top: -10px;">
+                <div id="log_form" class="form" style="border-radius: 10%;">
+                    <form action="" class="register_form">
+                        <input type="text" placeholder="用户名" id="r_username" />
+                        <input type="password" placeholder="密码" id="r_password" />
+                        <input type="text" placeholder="电子邮箱" id="r_email" />
+                        <button id="create" style="font-family: STXingkai;">注册</button>
+                        <p class="message">已有帐户？<a href="#">点击登录</a></p>
+                    </form>
+                    <form action="" class="login_form">
+                        <input type="text" placeholder="用户名" id="username" />
+                        <input type="password" placeholder="密码" id="password" />
+                        <button id="login">登录</button>
+                        <br><br><br><br>
+                        <p class="message">还没有帐户？<a href="#">立即注册</a></p>
+                    </form>
+
+                    <span>
+                        <!-- <p>使用您的社交媒体登录</p> -->
+                        <!-- <br><br><br><br><br><br><br><br><br><br> -->
+                        <a href="#">
+                            <img src="../img/qq.png" alt="QQ图标">
+                        </a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="#">
+                            <img src="../img/微信.png" alt="微信图标">
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <!-- <div class="remember-me--forget-password">
+                <label>
+                    <span class="checkbox-label"></span>
+                    <span class="text-checkbox">记住密码</span>
+                </label>
+                <p>忘记密码了？请点击我</p>
+            </div>
+
+            <br>
+            <button>登录</button> -->
+        </div>
+
+    </div>
+</body>
+
+</html>

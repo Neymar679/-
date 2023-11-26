@@ -1,0 +1,93 @@
+$yellow : #FDA202;
+$black : #171A1D;
+$blackPlus: #15181B;
+$font  : 'Lato', sans-serif;
+
+body{
+  font-family: $font;
+  color:white;
+    background: #171A1D;
+
+}
+
+#contain{
+  margin:0 auto;
+  width:1200px;
+  height:700px;
+  margin-top:150px;
+}
+
+#table{
+  width:350px;
+  height:377px;
+  display:inline-block;
+  /*border:3px solid rgba(39, 44, 48, 0.36); */
+  float:left;
+  background: $black;
+  margin-left:20px;
+ 
+
+  
+  .head{
+      font-weight:900;
+    font-size:30px;
+    text-transform:uppercase;
+    text-align:center;
+    min-height:60px;
+    line-height:50px;
+    
+  }
+  
+  .offer{
+    
+ 
+    
+    ul{
+      list-style:none;
+      padding:20px;
+      
+      
+      li{
+        
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 15px;
+        color:#8C8C8C;
+        
+        
+      }
+    }
+    
+    
+  } 
+  
+}
+
+
+.cta{
+  width:100%;
+height: 50px;
+    margin: 0 auto;
+    background: $yellow;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 50px;
+    font-size: 15px;
+    color: $black;
+    font-weight: 900;
+}
+
+
+
+.yellow{
+ border-bottom:5px solid $yellow;
+}
+
+
+
+  #table.pro{
+    background:$blackPlus;
+  }
+  
+  
